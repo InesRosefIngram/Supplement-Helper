@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplement Guide — Elite MMA</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0d0d0d;
+    --panel: #181818;
+    --border: #252525;
+    --text-dim: #777;
+    --text: #c8c2b8;
+    --white: #f0ebe3;
+    --accent: #e8452a;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header { background: var(--black); border-bottom: 1px solid var(--border); padding: 0 16px; }
+  .header-inner { display: flex; align-items: center; height: 50px; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.08em; color: var(--white); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .logo small { font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 300; color: var(--text-dim); margin-left: 8px; letter-spacing: 0; }
+
+  /* ── HERO ── */
+  .hero { background: #111; border-bottom: 1px solid var(--border); padding: 32px 16px 28px; }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: 3.2rem; line-height: 0.92; letter-spacing: 0.02em; color: var(--white); margin-bottom: 12px; }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p { font-size: 0.9rem; line-height: 1.65; color: var(--text-dim); font-weight: 300; max-width: 440px; }
+
+  /* ── CATEGORY NAV ── */
+  .cat-nav { position: sticky; top: 0; z-index: 100; background: rgba(13,13,13,0.97); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 10px 16px; }
+  .cat-nav-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+  .nav-tab {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; padding: 9px 4px; border-radius: 9px;
+    border: 1.5px solid var(--border);
+    cursor: pointer; background: var(--panel);
+    transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-tab:active { transform: scale(0.95); }
+  .nav-tab.active { border-color: var(--tab-color); background: var(--tab-bg); }
+  .nav-icon { font-size: 1.25rem; line-height: 1; }
+  .nav-label { font-size: 0.63rem; font-weight: 600; text-align: center; line-height: 1.2; color: var(--text-dim); letter-spacing: 0.02em; }
+  .nav-tab.active .nav-label { color: var(--white); }
+
+  /* ── CONTENT ── */
+  .content { padding: 0 16px; }
+
+  /* ── CATEGORY SECTION ── */
+  .cat-section { display: none; padding: 28px 0 40px; animation: fadeIn 0.2s ease; }
+  .cat-section.visible { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+
+  .cat-header { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .cat-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 4px; }
+  .cat-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; color: var(--white); line-height: 1; letter-spacing: 0.03em; margin-bottom: 8px; }
+  .cat-desc { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; font-weight: 300; }
+
+  .who-box { margin-bottom: 20px; padding: 12px 14px; border-radius: 8px; background: var(--panel); border-left: 3px solid var(--cat-color, var(--accent)); }
+  .who-box p { font-size: 0.83rem; color: var(--text); line-height: 1.5; font-weight: 300; }
+  .who-box strong { color: var(--white); font-weight: 500; }
+
+  /* ── PRODUCT CARDS ── */
+  .product-grid { display: flex; flex-direction: column; gap: 12px; }
+
+  .product-card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px; border-left: 3px solid var(--cat-color, var(--accent));
+  }
+
+  .product-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.04em; color: var(--white); margin-bottom: 2px; line-height: 1.1; }
+  .product-tagline { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .product-desc { font-size: 0.84rem; line-height: 1.6; color: var(--text-dim); font-weight: 300; margin-bottom: 10px; }
+
+  .product-highlights { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-bottom: 13px; }
+  .product-highlights li { font-size: 0.8rem; color: var(--text); display: flex; gap: 8px; line-height: 1.4; }
+  .product-highlights li::before { content: '—'; flex-shrink: 0; font-family: 'DM Mono', monospace; font-size: 0.7rem; margin-top: 1px; }
+
+  .product-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 11px; border-top: 1px solid var(--border); }
+  .product-price { font-family: 'DM Mono', monospace; font-size: 0.88rem; color: var(--white); font-weight: 500; }
+  .product-link {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+    text-decoration: none; padding: 6px 14px; border-radius: 5px;
+    border: 1.5px solid var(--cat-color, var(--accent));
+    color: var(--cat-color, var(--accent));
+    transition: all 0.15s;
+  }
+  .product-link:active { opacity: 0.7; }
+  .product-flavours { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  .flavour-pill { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.08em; padding:3px 9px; border-radius:20px; border:1px solid var(--border); color:var(--text-dim); background:var(--black); }
+
+  /* simplify footer — price left-aligned, no button */
+  .product-footer { padding-top:11px; border-top:1px solid var(--border); }
+  .product-price { font-family:'DM Mono',monospace; font-size:0.92rem; color:var(--white); font-weight:500; }
+
+
+  /* colour-coded highlights bullet */
+  .product-highlights li::before { color: var(--cat-color, var(--accent)); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">ELITE<span>MMA</span><small>Supplement Guide</small></a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">Elite MMA & Fitness Centre</div>
+  <h1>FIND YOUR<br><em>STACK.</em></h1>
+  <p>All products available from the Elite MMA tuckshop. Browse by goal to find what's right for you.</p>
+</section>
+
+<nav class="cat-nav">
+  <div class="cat-nav-grid" id="navGrid"></div>
+</nav>
+
+<div class="content" id="mainContent"></div>
+
+<script>
+const CATS = [
+  { id:"basics",      label:"The Basics",     icon:"🏋️",  color:"#c9a84c", bg:"rgba(201,168,76,0.1)",
+    tagline:"Start here.", desc:"The proven essentials — protein, creatine, vitamins. If you can only pick 2–3 things, start here.",
+    who:"Beginners, students, anyone wanting maximum impact without complexity.",
+    ids:["creatine","whey","protein100","aminoBCAA","multivitamins","omega3","immuneVitC"] },
+
+  { id:"recovery",    label:"Recovery",        icon:"⚡",   color:"#4caf6e", bg:"rgba(76,175,110,0.1)",
+    tagline:"Train hard. Recover harder.",  desc:"You grow during recovery, not training. These reduce soreness and get you ready for the next session faster.",
+    who:"Anyone training 3+ days a week or experiencing persistent soreness.",
+    ids:["whey","protein100","aminoBCAA","intra6","glutamine","gaba"] },
+
+  { id:"performance", label:"Performance",     icon:"🔥",   color:"#4a8fe0", bg:"rgba(74,143,224,0.1)",
+    tagline:"More power. More reps.",       desc:"Products that directly upgrade your output — energy, strength, endurance, and pump.",
+    who:"Intermediate to advanced athletes wanting to break training plateaus.",
+    ids:["creatine","stimNoxPowder","stimNoxCaps","nitric","intra6","fuelPlus","aminoBCAA"] },
+
+  { id:"vitamins",    label:"Wellness",        icon:"💊",   color:"#38b2ac", bg:"rgba(56,178,172,0.1)",
+    tagline:"Health first.",               desc:"Immune support, joints, gut, sleep. Supplements only work as well as the body absorbing them.",
+    who:"Everyone — especially athletes under high training stress.",
+    ids:["immuneVitC","omega3","multivitamins","glutamine","gaba","echinaforce"] },
+
+  { id:"kids",        label:"Kids",            icon:"🌱",   color:"#9b59b6", bg:"rgba(155,89,182,0.1)",
+    tagline:"Safe support for young athletes.", desc:"The right options for junior martial arts and school-sport athletes. Always food-first, supplements to fill genuine gaps.",
+    who:"Parents of active kids aged 8–17, junior kickboxing & MMA competitors.",
+    ids:["gummies","multivitamins","immuneVitC","omega3","fuelPlus","echinaforce"] },
+
+  { id:"fatloss",     label:"Fat Loss",        icon:"🎯",   color:"#e8452a", bg:"rgba(232,69,42,0.1)",
+    tagline:"Lean down. Keep what you've built.", desc:"Preserve muscle during a caloric deficit — high-protein, lower-calorie options that keep energy up.",
+    who:"Anyone in a cutting phase or wanting to improve body composition.",
+    ids:["protein100","whey","immuneVitC","glutamine"] },
+
+  { id:"mma",         label:"MMA / Combat",    icon:"🥊",   color:"#e84393", bg:"rgba(232,67,147,0.1)",
+    tagline:"Built for fighters.",         desc:"Explosive power, endurance, rapid recovery, weight management. Curated for the serious kickboxer or MMA athlete.",
+    who:"Elite MMA members, Cape Town Kickboxing competitors, combat athletes training 3+ times per week.",
+    ids:["creatine","whey","protein100","aminoBCAA","intra6","nitric","stimNoxPowder","stimNoxCaps","fuelPlus","glutamine","gaba","immuneVitC","omega3"] }
+];
+
+const PRODUCTS = {
+  creatine:     { name:"CREATINE MONOHYDRATE 300g", tagline:"Strength & power essential", price:"R 300",
+    desc:"The most researched supplement in sports science. Replenishes ATP for more explosive output, extra reps, and faster recovery between sets. Non-stimulant — safe for daily use.",
+    hi:["Increases strength & explosive power","Faster recovery between rounds","No caffeine — suitable any time","Proven in hundreds of studies"] },
+
+  aminoBCAA:    { name:"AMINO BCAA 330g", tagline:"Muscle protection during training", price:"R 235",
+    desc:"BCAAs are the three amino acids most responsible for muscle protein synthesis and preventing breakdown. Sip during your session or on rest days.",
+    hi:["Prevents muscle breakdown","Supports protein synthesis","Sip intra-workout or on rest days","Available in fruit punch flavour"] },
+
+  intra6:       { name:"INTRA 6 BERRY BLAST 363g", tagline:"Full intra-workout fuel", price:"R 387",
+    desc:"Aminos, fast carbohydrates, and electrolytes in one formula. Sustains energy, prevents muscle breakdown, and keeps you hydrated through demanding sessions.",
+    hi:["Aminos + carbs + electrolytes combined","Sustains energy in long sessions","Reduces mid-session fatigue","Ideal for 60+ min training"] },
+
+  gummies:      { name:"GUMMIES FOR KIDS 60 gummies", tagline:"Vitamins for active kids", price:"R 149",
+    desc:"A kid-friendly gummy multivitamin covering key vitamins and minerals for active, growing children. Easy to take, great taste.",
+    hi:["Fun & easy to take","Supports immune & energy function","Suitable for active children","No stimulants"] },
+
+  multivitamins:{ name:"MULTIVITAMINS 60 capsules", tagline:"Daily micronutrient foundation", price:"R 149",
+    desc:"A broad-spectrum multivitamin covering essentials that intense training depletes. Supports energy metabolism, immune function, and overall recovery.",
+    hi:["Covers key vitamins & minerals","Supports energy & immune health","Compensates for training depletion","Suitable for all ages"] },
+
+  stimNoxCaps:  { name:"STIM NOX CAPSULES 100", tagline:"⚡ Contains stimulants (caffeine)", price:"R 250",
+    desc:"A stimulant-based pre-workout in capsule form — contains caffeine for energy and focus, plus nitric oxide precursors for blood flow and pump. No mixing required. Avoid if training in the evening or if sensitive to caffeine.",
+    hi:["CONTAINS CAFFEINE — stimulant pre-workout","No mixing — take & go","Energy + focus + pump","Avoid within 4–5 hrs of sleep"] },
+
+  stimNoxPowder:{ name:"STIM NOX 300g FRUIT PUNCH", tagline:"Full-dose pre-workout powder", price:"R 360",
+    desc:"The powder version of Stim NOX — full pre-workout experience with energy, focus, and vasodilation for improved blood flow and pump.",
+    hi:["Flexible dosing","Energy + focus + pump","Fruit punch flavour","Full pre-workout experience"] },
+
+  nitric:       { name:"NITRIC PRE-WORKOUT 262.5g", tagline:"✅ Stimulant-free — pump & performance", price:"R 300",
+    desc:"A stimulant-free pre-workout focused purely on nitric oxide output and blood flow. No caffeine — safe to use any time of day, including evening sessions. Delivers intense muscle pumps and enhanced oxygen delivery through max-dosed citrulline.",
+    hi:["NO CAFFEINE — stimulant-free","Safe for evening training","Maximum vasodilation & pump","Enhanced oxygen & nutrient delivery"] },
+
+  fuelPlus:     { name:"FUEL PLUS SPORTS DRINK 600g", tagline:"Hydration & energy during activity", price:"R 180",
+    desc:"Fast carbohydrates and electrolytes for sustained energy and hydration during exercise. Light on the stomach — great for competition day or long sessions.",
+    hi:["Fast carbs + electrolytes","Sustains energy across long sessions","Light & easy on the stomach","Great for competition day"] },
+
+  upsize:       { name:"UPSIZE MASS GAINER 3kg", tagline:"Calories for serious size", price:"R 420",
+    desc:"High-calorie mass gainer combining protein, carbohydrates, and fats for hard gainers who struggle to meet caloric needs through food alone.",
+    hi:["High calorie per serving","Protein + carbs + fats","Ideal for hard gainers","Convenient post-workout"] },
+
+  whey:         { name:"WHEY ONE 980g", tagline:"Protein + BCAAs + Glutamine", price:"R 455",
+    flavours:["Chocotella","Vanilla"],
+    desc:"More than just protein — Whey One is fortified with added BCAAs and 5g of glutamine per serving. That means muscle protection, faster recovery, and gut health support built right in. A step up from basic protein shakes.",
+    hi:["~25g whey protein per serving","Added BCAAs for muscle protection","5g glutamine per serving — recovery & gut health","More complete than standard protein shakes","High protein supports muscle retention during weight cuts"] },
+
+  glutamine:    { name:"PURE GLUTAMINE 300g", tagline:"Recovery, gut & immune support", price:"R 284",
+    desc:"Depleted rapidly during intense training. Accelerates muscle recovery, supports gut lining integrity, and strengthens the immune system.",
+    hi:["Speeds up muscle recovery","Supports gut health","Strengthens immune system","Best taken post-workout or before bed"] },
+
+  gaba:         { name:"PURE GABA & L-THEANINE 60 caps", tagline:"Sleep, recovery & stress relief", price:"R 185",
+    desc:"GABA promotes deep, restorative sleep. L-Theanine reduces stress and anxiety without sedation. A powerful natural recovery stack for athletes under training and competition pressure.",
+    hi:["Deeper, more restorative sleep","Reduces training & competition stress","No dependency or grogginess","Take before bed on training days"] },
+
+  protein100:   { name:"100% PROTEIN 960g", tagline:"Clean, high-protein shake", price:"R 250",
+    flavours:["Vanilla","Chocotella"],
+    desc:"A clean, high-protein shake with no unnecessary extras. Great value for hitting daily protein targets. Good for cutting phases too.",
+    hi:["High protein per serving","Clean, simple formula — no unnecessary extras","Great value","Supports muscle retention during weight cuts"] },
+
+  immuneVitC:   { name:"IMMUNE BOOSTER — VIT C & ZN", tagline:"Immune defence & antioxidant", price:"R 180",
+    desc:"Vitamin C and Zinc — two of the most evidence-backed nutrients for immune function. Combats exercise-induced oxidative stress and supports immune cell production.",
+    hi:["Vitamin C + Zinc combination","Combats training-related immune dip","Antioxidant recovery support","Supports testosterone in male athletes"] },
+
+  omega3:       { name:"OMEGA 3 FISH OIL", tagline:"Anti-inflammatory & brain health", price:"R 240",
+    desc:"EPA & DHA reduce systemic inflammation, support cardiovascular health, improve joint mobility, and enhance cognitive function — critical for athletes training frequently.",
+    hi:["Powerful anti-inflammatory","Supports joint mobility","Heart & cardiovascular health","Enhances brain function & focus"] },
+
+  echinaforce:  { name:"A.VOGEL ECHINAFORCE", tagline:"Herbal immune defence", price:"R 200",
+    desc:"Clinically researched fresh Echinacea purpurea extract — one of the most well-studied natural immune boosters available. Reduces duration and severity of colds and upper respiratory infections.",
+    hi:["Fresh Echinacea purpurea extract","Clinically researched","Reduces cold duration & severity","Ideal during winter or high training load"] }
+};
+
+// ── BUILD NAV & SECTIONS ──────────────────────────────────────
+const navGrid = document.getElementById('navGrid');
+const mainEl  = document.getElementById('mainContent');
+
+CATS.forEach((cat, i) => {
+  // Nav button
+  const btn = document.createElement('button');
+  btn.className = 'nav-tab' + (i === 0 ? ' active' : '');
+  btn.dataset.cat = cat.id;
+  btn.style.setProperty('--tab-color', cat.color);
+  btn.style.setProperty('--tab-bg', cat.bg);
+  btn.innerHTML = `<span class="nav-icon">${cat.icon}</span><span class="nav-label">${cat.label}</span>`;
+  btn.addEventListener('click', () => switchCat(cat.id));
+  navGrid.appendChild(btn);
+
+  // Section
+  const sec = document.createElement('section');
+  sec.className = 'cat-section' + (i === 0 ? ' visible' : '');
+  sec.id = 'cat-' + cat.id;
+  sec.style.setProperty('--cat-color', cat.color);
+
+  const cards = cat.ids.map(id => {
+    const p = PRODUCTS[id]; if (!p) return '';
+    return `
+      <div class="product-card">
+        <div class="product-name">${p.name}</div>
+        ${p.flavours ? `<div class="product-flavours">${p.flavours.map(f=>`<span class="flavour-pill">${f}</span>`).join('')}</div>` : ''}
+        <div class="product-tagline" style="color:${cat.color}">${p.tagline}</div>
+        <div class="product-desc">${p.desc}</div>
+        <ul class="product-highlights">${p.hi.map(h=>`<li>${h}</li>`).join('')}</ul>
+        <div class="product-footer">
+          <span class="product-price">${p.price}</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  sec.innerHTML = `
+    <div class="cat-header">
+      <div class="cat-eyebrow" style="color:${cat.color}">${cat.tagline}</div>
+      <div class="cat-title">${cat.label}</div>
+      <div class="cat-desc">${cat.desc}</div>
+    </div>
+    <div class="who-box" style="border-left-color:${cat.color}">
+      <p><strong>Who is this for?</strong> ${cat.who}</p>
+    </div>
+    <div class="product-grid">${cards}</div>`;
+
+  mainEl.appendChild(sec);
+});
+
+function switchCat(id) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === id));
+  document.querySelectorAll('.cat-section').forEach(s => s.classList.toggle('visible', s.id === 'cat-' + id));
+  document.querySelector('.cat-nav').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>
