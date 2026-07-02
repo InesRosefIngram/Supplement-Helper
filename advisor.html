@@ -126,7 +126,7 @@
 
   <!-- STEP 1: GOALS -->
   <div class="step visible" id="step-goals">
-    <div class="step-label">Step 1 of 2</div>
+    <div class="step-label">Goal</div>
     <div class="step-title">What are you training for?</div>
     <div class="step-sub">Pick one or more. Or choose "My child" on its own if you're shopping for a junior athlete.</div>
     <div class="option-grid" id="goalGrid"></div>
@@ -135,9 +135,21 @@
     </div>
   </div>
 
+  <!-- STEP 1B: STIM / CAFFEINE (only shown when relevant) -->
+  <div class="step" id="step-stim">
+    <div class="step-label">Pre-Workout Style</div>
+    <div class="step-title">Caffeine, or stim-free?</div>
+    <div class="step-sub">We stock both — this decides which pre-workout gets recommended.</div>
+    <div class="option-grid" id="stimGrid"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="backToGoalsFromStim">Back</button>
+      <button class="btn btn-primary" id="toStep2fromStim" disabled>Next</button>
+    </div>
+  </div>
+
   <!-- STEP 2: BUDGET -->
   <div class="step" id="step-budget">
-    <div class="step-label">Step 2 of 2</div>
+    <div class="step-label">Budget</div>
     <div class="step-title">What's your budget?</div>
     <div class="step-sub">We'll prioritise the highest-impact products first and fit as much in as makes sense.</div>
     <div class="option-grid" id="budgetGrid"></div>
@@ -189,19 +201,39 @@ const PRODUCTS = {
 };
 
 // ── GOALS — picks are priority-ordered (best first) ──
+// "STIM_CHOICE" is a placeholder resolved at runtime from the stim/caffeine
+// question, so goals never hardcode a specific pre-workout.
+// Each list deliberately includes only ONE item per exclusive group (see
+// EXCLUSIVE_GROUPS below) — the best fit for that goal specifically.
 const GOALS = [
-  { id:"strength", icon:"🔥", label:"Strength & Power",         picks:["creatine","stimNoxCaps","nitric","whey","aminoBCAA"] },
-  { id:"muscle",   icon:"💪", label:"Build Muscle",              picks:["whey","protein100","creatine","aminoBCAA","glutamine","upsize"] },
-  { id:"recovery", icon:"⚡", label:"Recover Faster",            picks:["whey","aminoBCAA","glutamine","gaba","intra6","omega3"] },
-  { id:"fatloss",  icon:"🎯", label:"Lose Fat / Lean Down",      picks:["protein100","whey","glutamine","multivitamins"] },
-  { id:"energy",   icon:"⚙️", label:"Energy & Focus",            picks:["stimNoxCaps","nitric","fuelPlus","creatine"] },
+  { id:"strength", icon:"🔥", label:"Strength & Power",         picks:["creatine","STIM_CHOICE","whey","aminoBCAA"] },
+  { id:"muscle",   icon:"💪", label:"Build Muscle",              picks:["whey","creatine","aminoBCAA","glutamine","upsize"] },
+  { id:"recovery", icon:"⚡", label:"Recover Faster",            picks:["whey","intra6","glutamine","gaba","omega3"] },
+  { id:"fatloss",  icon:"🎯", label:"Lose Fat / Lean Down",      picks:["protein100","glutamine","multivitamins"] },
+  { id:"energy",   icon:"⚙️", label:"Energy & Focus",            picks:["STIM_CHOICE","creatine","fuelPlus"] },
   { id:"wellness", icon:"💊", label:"General Health & Immunity", picks:["multivitamins","immuneVitC","omega3","echinaforce","gaba"] },
+  { id:"mma",      icon:"🥊", label:"MMA / Combat",              picks:["creatine","whey","intra6","STIM_CHOICE","fuelPlus","glutamine","gaba","immuneVitC","omega3"] },
 ];
 const KIDS_GOAL = { id:"kids", icon:"🌱", label:"My Child (Junior Athlete)", picks:["gummies","multivitamins","immuneVitC","omega3","fuelPlus","echinaforce"] };
 
+// Goals that involve a pre-workout — these trigger the stim/caffeine question.
+const STIM_NEEDED_GOALS = ["strength", "energy", "mma"];
+
+// Products that do the same job — only the best-fit ONE should ever end up
+// in a single result. If two members both make it in via different goals,
+// the higher-scored one wins and the other is dropped.
+const EXCLUSIVE_GROUPS = [
+  ["whey", "protein100"],                     // daily protein — pick one
+  ["aminoBCAA", "intra6"],                    // intra-workout aminos — pick one
+  ["stimNoxCaps", "stimNoxPowder", "nitric"], // pre-workout — pick one
+];
+
+// Resolves the user's stim/caffeine answer to an actual product id (or null).
+const STIM_RESOLUTION = { caffeine: "stimNoxCaps", stimfree: "nitric", none: null };
+
 const BUDGETS = [
   { id:"tight",    icon:"🎯", label:"Keep it lean", sub:"Under R500 — just the essentials", cap:500 },
-  { id:"moderate", icon:"⚖️", label:"Moderate",      sub:"R500 – R1000", cap:1000 },
+  { id:"moderate", icon:"⚖️", label:"Moderate",      sub:"R500 – R1000 · a well-rounded stack", cap:1000 },
   { id:"open",     icon:"🚀", label:"No limit",      sub:"Show me everything relevant", cap:Infinity },
 ];
 
@@ -230,6 +262,27 @@ const goalGrid = document.getElementById('goalGrid');
   goalGrid.appendChild(el);
 });
 
+// ── BUILD STIM OPTIONS ──
+const STIM_OPTIONS = [
+  { id:"caffeine", icon:"⚡", label:"Bring the caffeine", sub:"Stim NOX — energy & focus" },
+  { id:"stimfree", icon:"✅", label:"Keep it stim-free",  sub:"Nitric — pump, no caffeine, safe for evenings" },
+  { id:"none",     icon:"🚫", label:"Not needed",          sub:"Skip pre-workout entirely" },
+];
+let selectedStim = null;
+const stimGrid = document.getElementById('stimGrid');
+STIM_OPTIONS.forEach(s => {
+  const el = document.createElement('div');
+  el.className = 'option';
+  el.dataset.id = s.id;
+  el.innerHTML = `<span class="option-icon">${s.icon}</span><span class="option-text"><span class="option-name">${s.label}</span><br><span style="font-size:0.72rem;color:var(--text-dim)">${s.sub}</span></span><span class="option-check">✓</span>`;
+  el.addEventListener('click', () => {
+    selectedStim = s.id;
+    document.querySelectorAll('#stimGrid .option').forEach(o => o.classList.toggle('selected', o.dataset.id === s.id));
+    document.getElementById('toStep2fromStim').disabled = false;
+  });
+  stimGrid.appendChild(el);
+});
+
 // ── BUILD BUDGET OPTIONS ──
 const budgetGrid = document.getElementById('budgetGrid');
 BUDGETS.forEach(b => {
@@ -250,12 +303,23 @@ function showStep(id) {
   document.querySelectorAll('.step').forEach(s => s.classList.toggle('visible', s.id === id));
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-document.getElementById('toStep2').addEventListener('click', () => showStep('step-budget'));
-document.getElementById('backTo1').addEventListener('click', () => showStep('step-goals'));
+function stimIsNeeded() {
+  return !selectedGoals.includes('kids') && selectedGoals.some(id => STIM_NEEDED_GOALS.includes(id));
+}
+
+document.getElementById('toStep2').addEventListener('click', () => {
+  showStep(stimIsNeeded() ? 'step-stim' : 'step-budget');
+});
+document.getElementById('backToGoalsFromStim').addEventListener('click', () => showStep('step-goals'));
+document.getElementById('toStep2fromStim').addEventListener('click', () => showStep('step-budget'));
+document.getElementById('backTo1').addEventListener('click', () => {
+  showStep(stimIsNeeded() ? 'step-stim' : 'step-goals');
+});
 document.getElementById('startOver').addEventListener('click', () => {
-  selectedGoals = []; selectedBudget = null;
+  selectedGoals = []; selectedBudget = null; selectedStim = null;
   document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
   document.getElementById('toStep2').disabled = true;
+  document.getElementById('toStep2fromStim').disabled = true;
   document.getElementById('toResults').disabled = true;
   showStep('step-goals');
 });
@@ -274,6 +338,25 @@ document.getElementById('toResults').addEventListener('click', () => {
       goal.picks.forEach((id, i) => { scored[id] = (scored[id] || 0) + (goal.picks.length - i); });
     });
   }
+
+  // Resolve the STIM_CHOICE placeholder into an actual product (or drop it)
+  if (scored.hasOwnProperty('STIM_CHOICE')) {
+    const resolved = STIM_RESOLUTION[selectedStim];
+    const weight = scored['STIM_CHOICE'];
+    delete scored['STIM_CHOICE'];
+    if (resolved) scored[resolved] = (scored[resolved] || 0) + weight;
+  }
+
+  // Enforce exclusive groups — only the highest-scored member of each
+  // "same job" group survives (e.g. Whey vs 100% Protein, Amino vs Intra 6,
+  // Stim NOX vs Nitric). Prevents recommending two products for one job.
+  EXCLUSIVE_GROUPS.forEach(group => {
+    const present = group.filter(id => scored.hasOwnProperty(id));
+    if (present.length > 1) {
+      const winner = present.sort((a, b) => scored[b] - scored[a])[0];
+      present.forEach(id => { if (id !== winner) delete scored[id]; });
+    }
+  });
 
   const ranked = Object.keys(scored).sort((a, b) => scored[b] - scored[a]);
 
