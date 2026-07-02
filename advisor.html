@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supplement Advisor — Elite MMA</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0d0d0d;
+    --panel: #181818;
+    --border: #252525;
+    --text-dim: #777;
+    --text: #c8c2b8;
+    --white: #f0ebe3;
+    --accent: #e8452a;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header { background: var(--black); border-bottom: 1px solid var(--border); padding: 0 16px; }
+  .header-inner { display: flex; align-items: center; height: 50px; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.08em; color: var(--white); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .logo small { font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 300; color: var(--text-dim); margin-left: 8px; letter-spacing: 0; }
+
+  /* ── PAGE TABS (shared with index.html) ── */
+  .page-tabs { display: flex; background: var(--black); border-bottom: 1px solid var(--border); }
+  .page-tab {
+    flex: 1; text-align: center; padding: 12px 8px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em; text-decoration: none;
+    color: var(--text-dim); border-bottom: 2px solid transparent; transition: all 0.15s;
+  }
+  .page-tab.active { color: var(--white); border-bottom-color: var(--accent); }
+  .page-tab:active { opacity: 0.7; }
+
+  /* ── HERO ── */
+  .hero { background: #111; border-bottom: 1px solid var(--border); padding: 28px 16px 24px; }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem; line-height: 0.95; letter-spacing: 0.02em; color: var(--white); margin-bottom: 10px; }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p { font-size: 0.88rem; line-height: 1.6; color: var(--text-dim); font-weight: 300; max-width: 440px; }
+
+  .content { padding: 20px 16px 40px; max-width: 560px; margin: 0 auto; }
+
+  /* ── STEPS ── */
+  .step { display: none; }
+  .step.visible { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+
+  .step-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .step-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; color: var(--white); letter-spacing: 0.02em; margin-bottom: 4px; }
+  .step-sub { font-size: 0.82rem; color: var(--text-dim); font-weight: 300; margin-bottom: 18px; }
+
+  .option-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+  .option {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+    background: var(--panel); border: 1.5px solid var(--border); border-radius: 10px;
+    cursor: pointer; transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+  }
+  .option:active { transform: scale(0.98); }
+  .option.selected { border-color: var(--accent); background: rgba(232,69,42,0.08); }
+  .option-icon { font-size: 1.3rem; line-height: 1; flex-shrink: 0; }
+  .option-text { flex: 1; }
+  .option-name { font-size: 0.9rem; font-weight: 500; color: var(--white); }
+  .option-check { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border); flex-shrink: 0; display:flex; align-items:center; justify-content:center; font-size: 0.7rem; color: var(--black); }
+  .option.selected .option-check { background: var(--accent); border-color: var(--accent); }
+
+  .btn-row { display: flex; gap: 10px; }
+  .btn {
+    flex: 1; padding: 14px; border-radius: 8px; border: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.03em;
+    -webkit-tap-highlight-color: transparent; transition: all 0.15s;
+  }
+  .btn:active { opacity: 0.8; }
+  .btn-primary { background: var(--accent); color: var(--white); }
+  .btn-primary:disabled { background: var(--panel); color: var(--text-dim); cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--text-dim); border: 1.5px solid var(--border); }
+
+  /* ── RESULTS ── */
+  .result-summary { margin-bottom: 20px; padding: 14px 16px; border-radius: 10px; background: var(--panel); border-left: 3px solid var(--accent); }
+  .result-summary p { font-size: 0.83rem; color: var(--text); line-height: 1.55; font-weight: 300; }
+  .result-summary strong { color: var(--white); font-weight: 500; }
+
+  .pick-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .pick-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 3px solid var(--accent); position: relative; }
+  .pick-badge {
+    display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent); border: 1px solid var(--accent); border-radius: 20px;
+    padding: 2px 9px; margin-bottom: 8px;
+  }
+  .pick-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.03em; color: var(--white); line-height: 1.1; margin-bottom: 3px; }
+  .pick-tagline { font-size: 0.78rem; color: var(--text-dim); font-weight: 300; margin-bottom: 10px; }
+  .pick-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--border); }
+  .pick-price { font-family: 'DM Mono', monospace; font-size: 0.88rem; color: var(--white); font-weight: 500; }
+
+  .pick-total { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--black); border: 1.5px solid var(--border); border-radius: 10px; margin-bottom: 20px; }
+  .pick-total-label { font-size: 0.8rem; color: var(--text-dim); }
+  .pick-total-value { font-family: 'DM Mono', monospace; font-size: 1.05rem; color: var(--white); font-weight: 500; }
+
+  .disclaimer { font-size: 0.72rem; color: var(--text-dim); font-weight: 300; line-height: 1.5; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">ELITE<span>MMA</span><small>Supplement Guide</small></a>
+  </div>
+</header>
+
+<div class="page-tabs">
+  <a href="index.html" class="page-tab">Product Guide</a>
+  <a href="advisor.html" class="page-tab active">Ask the Advisor</a>
+</div>
+
+<section class="hero">
+  <div class="hero-eyebrow">Elite MMA & Fitness Centre</div>
+  <h1>NOT SURE<br>WHERE TO <em>START?</em></h1>
+  <p>Answer two quick questions and we'll prioritise what's actually worth buying first — no guesswork.</p>
+</section>
+
+<div class="content">
+
+  <!-- STEP 1: GOALS -->
+  <div class="step visible" id="step-goals">
+    <div class="step-label">Step 1 of 2</div>
+    <div class="step-title">What are you training for?</div>
+    <div class="step-sub">Pick one or more. Or choose "My child" on its own if you're shopping for a junior athlete.</div>
+    <div class="option-grid" id="goalGrid"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="toStep2" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: BUDGET -->
+  <div class="step" id="step-budget">
+    <div class="step-label">Step 2 of 2</div>
+    <div class="step-title">What's your budget?</div>
+    <div class="step-sub">We'll prioritise the highest-impact products first and fit as much in as makes sense.</div>
+    <div class="option-grid" id="budgetGrid"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="backTo1">Back</button>
+      <button class="btn btn-primary" id="toResults" disabled>Show My Picks</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: RESULTS -->
+  <div class="step" id="step-results">
+    <div class="step-label">Your Recommendation</div>
+    <div class="step-title" id="resultsTitle">Your Stack</div>
+    <div class="result-summary"><p id="resultsSummary"></p></div>
+    <div class="pick-grid" id="pickGrid"></div>
+    <div class="pick-total" id="pickTotal" style="display:none">
+      <span class="pick-total-label">Total</span>
+      <span class="pick-total-value" id="pickTotalValue"></span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="startOver">Start Over</button>
+      <a class="btn btn-primary" href="index.html" style="text-align:center; text-decoration:none; display:flex; align-items:center; justify-content:center;">View Full Guide</a>
+    </div>
+    <p class="disclaimer">All products available in-store at the Elite MMA tuckshop — ask Dave or the team on-site. Prices subject to change.</p>
+  </div>
+
+</div>
+
+<script>
+// ── PRODUCT DATA (kept in sync with index.html — update prices in both files) ──
+const PRODUCTS = {
+  creatine:      { name:"Creatine Monohydrate 300g",       tagline:"Strength & power essential",             price:300 },
+  aminoBCAA:     { name:"Amino BCAA 330g",                  tagline:"Muscle protection during training",      price:235 },
+  intra6:        { name:"Intra 6 Berry Blast 363g",         tagline:"Full intra-workout fuel",                 price:387 },
+  gummies:       { name:"Gummies for Kids 60 gummies",       tagline:"Vitamins for active kids",                price:149 },
+  multivitamins: { name:"Multivitamins 60 capsules",         tagline:"Daily micronutrient foundation",          price:149 },
+  stimNoxCaps:   { name:"Stim NOX Capsules 100",             tagline:"⚡ Stimulant pre-workout, no mixing",     price:250 },
+  stimNoxPowder: { name:"Stim NOX 300g Fruit Punch",         tagline:"Full-dose pre-workout powder",            price:360 },
+  nitric:        { name:"Nitric Pre-Workout 262.5g",         tagline:"✅ Stimulant-free pump & performance",    price:300 },
+  fuelPlus:      { name:"Fuel Plus Sports Drink 600g",       tagline:"Hydration & energy during activity",      price:180 },
+  upsize:        { name:"Upsize Mass Gainer 3kg",            tagline:"Calories for serious size",               price:420 },
+  whey:          { name:"Whey One 980g",                     tagline:"Protein + BCAAs + Glutamine",             price:455 },
+  glutamine:     { name:"Pure Glutamine 300g",                tagline:"Recovery, gut & immune support",         price:284 },
+  gaba:          { name:"Pure GABA & L-Theanine 60 caps",    tagline:"Sleep, recovery & stress relief",         price:185 },
+  protein100:    { name:"100% Protein 960g",                  tagline:"Clean, high-protein shake",              price:295 },
+  immuneVitC:    { name:"Immune Booster — Vit C & Zn",        tagline:"Immune defence & antioxidant",           price:180 },
+  omega3:        { name:"Omega 3 Fish Oil",                   tagline:"Anti-inflammatory & brain health",       price:240 },
+  echinaforce:   { name:"A.Vogel Echinaforce",                tagline:"Herbal immune defence",                  price:200 },
+};
+
+// ── GOALS — picks are priority-ordered (best first) ──
+const GOALS = [
+  { id:"strength", icon:"🔥", label:"Strength & Power",         picks:["creatine","stimNoxCaps","nitric","whey","aminoBCAA"] },
+  { id:"muscle",   icon:"💪", label:"Build Muscle",              picks:["whey","protein100","creatine","aminoBCAA","glutamine","upsize"] },
+  { id:"recovery", icon:"⚡", label:"Recover Faster",            picks:["whey","aminoBCAA","glutamine","gaba","intra6","omega3"] },
+  { id:"fatloss",  icon:"🎯", label:"Lose Fat / Lean Down",      picks:["protein100","whey","glutamine","multivitamins"] },
+  { id:"energy",   icon:"⚙️", label:"Energy & Focus",            picks:["stimNoxCaps","nitric","fuelPlus","creatine"] },
+  { id:"wellness", icon:"💊", label:"General Health & Immunity", picks:["multivitamins","immuneVitC","omega3","echinaforce","gaba"] },
+];
+const KIDS_GOAL = { id:"kids", icon:"🌱", label:"My Child (Junior Athlete)", picks:["gummies","multivitamins","immuneVitC","omega3","fuelPlus","echinaforce"] };
+
+const BUDGETS = [
+  { id:"tight",    icon:"🎯", label:"Keep it lean", sub:"Under R500 — just the essentials", cap:500 },
+  { id:"moderate", icon:"⚖️", label:"Moderate",      sub:"R500 – R1000", cap:1000 },
+  { id:"open",     icon:"🚀", label:"No limit",      sub:"Show me everything relevant", cap:Infinity },
+];
+
+let selectedGoals = [];
+let selectedBudget = null;
+
+// ── BUILD GOAL OPTIONS ──
+const goalGrid = document.getElementById('goalGrid');
+[...GOALS, KIDS_GOAL].forEach(g => {
+  const el = document.createElement('div');
+  el.className = 'option';
+  el.dataset.id = g.id;
+  el.innerHTML = `<span class="option-icon">${g.icon}</span><span class="option-text"><span class="option-name">${g.label}</span></span><span class="option-check">✓</span>`;
+  el.addEventListener('click', () => {
+    if (g.id === 'kids') {
+      // Kids is exclusive
+      selectedGoals = selectedGoals.includes('kids') ? [] : ['kids'];
+    } else {
+      selectedGoals = selectedGoals.filter(id => id !== 'kids');
+      if (selectedGoals.includes(g.id)) selectedGoals = selectedGoals.filter(id => id !== g.id);
+      else selectedGoals.push(g.id);
+    }
+    document.querySelectorAll('#goalGrid .option').forEach(o => o.classList.toggle('selected', selectedGoals.includes(o.dataset.id)));
+    document.getElementById('toStep2').disabled = selectedGoals.length === 0;
+  });
+  goalGrid.appendChild(el);
+});
+
+// ── BUILD BUDGET OPTIONS ──
+const budgetGrid = document.getElementById('budgetGrid');
+BUDGETS.forEach(b => {
+  const el = document.createElement('div');
+  el.className = 'option';
+  el.dataset.id = b.id;
+  el.innerHTML = `<span class="option-icon">${b.icon}</span><span class="option-text"><span class="option-name">${b.label}</span><br><span style="font-size:0.72rem;color:var(--text-dim)">${b.sub}</span></span><span class="option-check">✓</span>`;
+  el.addEventListener('click', () => {
+    selectedBudget = b.id;
+    document.querySelectorAll('#budgetGrid .option').forEach(o => o.classList.toggle('selected', o.dataset.id === b.id));
+    document.getElementById('toResults').disabled = false;
+  });
+  budgetGrid.appendChild(el);
+});
+
+// ── NAVIGATION ──
+function showStep(id) {
+  document.querySelectorAll('.step').forEach(s => s.classList.toggle('visible', s.id === id));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.getElementById('toStep2').addEventListener('click', () => showStep('step-budget'));
+document.getElementById('backTo1').addEventListener('click', () => showStep('step-goals'));
+document.getElementById('startOver').addEventListener('click', () => {
+  selectedGoals = []; selectedBudget = null;
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  document.getElementById('toStep2').disabled = true;
+  document.getElementById('toResults').disabled = true;
+  showStep('step-goals');
+});
+
+document.getElementById('toResults').addEventListener('click', () => {
+  const isKids = selectedGoals.includes('kids');
+  const cap = BUDGETS.find(b => b.id === selectedBudget).cap;
+
+  // Score products by summed rank-weight across selected goals
+  let scored = {};
+  if (isKids) {
+    KIDS_GOAL.picks.forEach((id, i) => scored[id] = KIDS_GOAL.picks.length - i);
+  } else {
+    selectedGoals.forEach(gid => {
+      const goal = GOALS.find(g => g.id === gid);
+      goal.picks.forEach((id, i) => { scored[id] = (scored[id] || 0) + (goal.picks.length - i); });
+    });
+  }
+
+  const ranked = Object.keys(scored).sort((a, b) => scored[b] - scored[a]);
+
+  // Fit into budget greedily; "open" just takes the top ones
+  let picks = [];
+  let total = 0;
+  const limit = cap === Infinity ? 6 : ranked.length;
+  for (const id of ranked) {
+    if (picks.length >= limit) break;
+    const price = PRODUCTS[id].price;
+    if (cap === Infinity || total + price <= cap) {
+      picks.push(id);
+      total += price;
+    }
+  }
+  // If nothing fit the budget at all, still show the single top pick
+  if (picks.length === 0 && ranked.length > 0) {
+    picks.push(ranked[0]);
+    total += PRODUCTS[ranked[0]].price;
+  }
+
+  // Render
+  const goalLabels = isKids ? ["your child"] : selectedGoals.map(id => GOALS.find(g => g.id === id).label.toLowerCase());
+  document.getElementById('resultsTitle').textContent = isKids ? "For Your Junior Athlete" : "Your Priority Stack";
+  document.getElementById('resultsSummary').innerHTML = `Based on <strong>${goalLabels.join(', ')}</strong>, here's what to prioritise first — ranked by impact, in order.`;
+
+  const pickGrid = document.getElementById('pickGrid');
+  pickGrid.innerHTML = picks.map((id, i) => {
+    const p = PRODUCTS[id];
+    return `
+      <div class="pick-card">
+        ${i === 0 ? '<div class="pick-badge">Priority Pick</div>' : `<div class="pick-badge" style="opacity:0.6">#${i+1}</div>`}
+        <div class="pick-name">${p.name}</div>
+        <div class="pick-tagline">${p.tagline}</div>
+        <div class="pick-footer"><span class="pick-price">R ${p.price}</span></div>
+      </div>`;
+  }).join('');
+
+  const totalEl = document.getElementById('pickTotal');
+  if (cap !== Infinity) {
+    totalEl.style.display = 'flex';
+    document.getElementById('pickTotalValue').textContent = `R ${total}`;
+  } else {
+    totalEl.style.display = 'none';
+  }
+
+  showStep('step-results');
+});
+</script>
+</body>
+</html>
