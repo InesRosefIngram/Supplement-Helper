@@ -26,6 +26,16 @@
   .logo span { color: var(--accent); }
   .logo small { font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 300; color: var(--text-dim); margin-left: 8px; letter-spacing: 0; }
 
+  /* ── PAGE TABS ── */
+  .page-tabs { display: flex; background: var(--black); border-bottom: 1px solid var(--border); }
+  .page-tab {
+    flex: 1; text-align: center; padding: 12px 8px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em; text-decoration: none;
+    color: var(--text-dim); border-bottom: 2px solid transparent; transition: all 0.15s;
+  }
+  .page-tab.active { color: var(--white); border-bottom-color: var(--accent); }
+  .page-tab:active { opacity: 0.7; }
+
   /* ── HERO ── */
   .hero { background: #111; border-bottom: 1px solid var(--border); padding: 32px 16px 28px; }
   .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
@@ -112,6 +122,11 @@
     <a href="#" class="logo">ELITE<span>MMA</span><small>Supplement Guide</small></a>
   </div>
 </header>
+
+<div class="page-tabs">
+  <a href="index.html" class="page-tab active">Product Guide</a>
+  <a href="advisor.html" class="page-tab">Ask the Advisor</a>
+</div>
 
 <section class="hero">
   <div class="hero-eyebrow">Elite MMA & Fitness Centre</div>
