@@ -114,6 +114,7 @@
 <div class="page-tabs">
   <a href="index.html" class="page-tab">Product Guide</a>
   <a href="advisor.html" class="page-tab active">Ask the Advisor</a>
+  <a href="pricing.html" class="page-tab">Pricing</a>
 </div>
 
 <section class="hero">
@@ -178,26 +179,27 @@
 
 </div>
 
+<script src="prices.js"></script>
 <script>
-// ── PRODUCT DATA (kept in sync with index.html — update prices in both files) ──
+// ── PRODUCT DATA (prices now come from the shared prices.js) ──
 const PRODUCTS = {
-  creatine:      { name:"Creatine Monohydrate 300g",       tagline:"Strength & power essential",             price:300 },
-  aminoBCAA:     { name:"Amino BCAA 330g",                  tagline:"Muscle protection during training",      price:235 },
-  intra6:        { name:"Intra 6 Berry Blast 363g",         tagline:"Full intra-workout fuel",                 price:387 },
-  gummies:       { name:"Gummies for Kids 60 gummies",       tagline:"Vitamins for active kids",                price:149 },
-  multivitamins: { name:"Multivitamins 60 capsules",         tagline:"Daily micronutrient foundation",          price:149 },
-  stimNoxCaps:   { name:"Stim NOX Capsules 100",             tagline:"⚡ Stimulant pre-workout, no mixing",     price:250 },
-  stimNoxPowder: { name:"Stim NOX 300g Fruit Punch",         tagline:"Full-dose pre-workout powder",            price:360 },
-  nitric:        { name:"Nitric Pre-Workout 262.5g",         tagline:"✅ Stimulant-free pump & performance",    price:300 },
-  fuelPlus:      { name:"Fuel Plus Sports Drink 600g",       tagline:"Hydration & energy during activity",      price:180 },
-  upsize:        { name:"Upsize Mass Gainer 3kg",            tagline:"Calories for serious size",               price:420 },
-  whey:          { name:"Whey One 980g",                     tagline:"Protein + BCAAs + Glutamine",             price:455 },
-  glutamine:     { name:"Pure Glutamine 300g",                tagline:"Recovery, gut & immune support",         price:284 },
-  gaba:          { name:"Pure GABA & L-Theanine 60 caps",    tagline:"Sleep, recovery & stress relief",         price:185 },
-  protein100:    { name:"100% Protein 960g",                  tagline:"Clean, high-protein shake",              price:295 },
-  immuneVitC:    { name:"Immune Booster — Vit C & Zn",        tagline:"Immune defence & antioxidant",           price:180 },
-  omega3:        { name:"Omega 3 Fish Oil",                   tagline:"Anti-inflammatory & brain health",       price:240 },
-  echinaforce:   { name:"A.Vogel Echinaforce",                tagline:"Herbal immune defence",                  price:200 },
+  creatine:      { name:"Creatine Monohydrate 300g",       tagline:"Strength & power essential",             price:PRICES.creatine },
+  aminoBCAA:     { name:"Amino BCAA 330g",                  tagline:"Muscle protection during training",      price:PRICES.aminoBCAA },
+  intra6:        { name:"Intra 6 Berry Blast 363g",         tagline:"Full intra-workout fuel",                 price:PRICES.intra6 },
+  gummies:       { name:"Gummies for Kids 60 gummies",       tagline:"Vitamins for active kids",                price:PRICES.gummies },
+  multivitamins: { name:"Multivitamins 60 capsules",         tagline:"Daily micronutrient foundation",          price:PRICES.multivitamins },
+  stimNoxCaps:   { name:"Stim NOX Capsules 100",             tagline:"⚡ Stimulant pre-workout, no mixing",     price:PRICES.stimNoxCaps },
+  stimNoxPowder: { name:"Stim NOX 300g Fruit Punch",         tagline:"Full-dose pre-workout powder",            price:PRICES.stimNoxPowder },
+  nitric:        { name:"Nitric Pre-Workout 262.5g",         tagline:"✅ Stimulant-free pump & performance",    price:PRICES.nitric },
+  fuelPlus:      { name:"Fuel Plus Sports Drink 600g",       tagline:"Hydration & energy during activity",      price:PRICES.fuelPlus },
+  upsize:        { name:"Upsize Mass Gainer 3kg",            tagline:"Calories for serious size",               price:PRICES.upsize },
+  whey:          { name:"Whey One 980g",                     tagline:"Protein + BCAAs + Glutamine",             price:PRICES.whey },
+  glutamine:     { name:"Pure Glutamine 300g",                tagline:"Recovery, gut & immune support",         price:PRICES.glutamine },
+  gaba:          { name:"Pure GABA & L-Theanine 60 caps",    tagline:"Sleep, recovery & stress relief",         price:PRICES.gaba },
+  protein100:    { name:"100% Protein 960g",                  tagline:"Clean, high-protein shake",              price:PRICES.protein100 },
+  immuneVitC:    { name:"Immune Booster — Vit C & Zn",        tagline:"Immune defence & antioxidant",           price:PRICES.immuneVitC },
+  omega3:        { name:"Omega 3 Fish Oil",                   tagline:"Anti-inflammatory & brain health",       price:PRICES.omega3 },
+  echinaforce:   { name:"A.Vogel Echinaforce",                tagline:"Herbal immune defence",                  price:PRICES.echinaforce },
 };
 
 // ── GOALS — picks are priority-ordered (best first) ──
