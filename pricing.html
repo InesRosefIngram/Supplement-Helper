@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Elite MMA</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0d0d0d;
+    --panel: #181818;
+    --border: #252525;
+    --text-dim: #777;
+    --text: #c8c2b8;
+    --white: #f0ebe3;
+    --accent: #e8452a;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(--text); min-height: 100vh; }
+
+  /* ── HEADER ── */
+  header { background: var(--black); border-bottom: 1px solid var(--border); padding: 0 16px; }
+  .header-inner { display: flex; align-items: center; height: 50px; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.25rem; letter-spacing: 0.08em; color: var(--white); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .logo small { font-family: 'DM Sans', sans-serif; font-size: 0.68rem; font-weight: 300; color: var(--text-dim); margin-left: 8px; letter-spacing: 0; }
+
+  /* ── PAGE TABS (shared with index.html / advisor.html) ── */
+  .page-tabs { display: flex; background: var(--black); border-bottom: 1px solid var(--border); }
+  .page-tab {
+    flex: 1; text-align: center; padding: 12px 8px; font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em; text-decoration: none;
+    color: var(--text-dim); border-bottom: 2px solid transparent; transition: all 0.15s;
+  }
+  .page-tab.active { color: var(--white); border-bottom-color: var(--accent); }
+  .page-tab:active { opacity: 0.7; }
+
+  /* ── HERO ── */
+  .hero { background: #111; border-bottom: 1px solid var(--border); padding: 28px 16px 24px; }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: 2.6rem; line-height: 0.95; letter-spacing: 0.02em; color: var(--white); margin-bottom: 10px; }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p { font-size: 0.88rem; line-height: 1.6; color: var(--text-dim); font-weight: 300; max-width: 440px; }
+
+  .content { padding: 20px 16px 40px; max-width: 560px; margin: 0 auto; }
+
+  /* ── PRICE LIST ── */
+  .price-list { display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 4px 16px; }
+  .price-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .price-row:last-child { border-bottom: none; }
+  .price-name-block { flex: 1; min-width: 0; }
+  .price-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 0.03em; color: var(--white); line-height: 1.15; }
+  .price-tagline { font-size: 0.74rem; color: var(--text-dim); font-weight: 300; margin-top: 2px; line-height: 1.4; }
+  .price-value { font-family: 'DM Mono', monospace; font-size: 0.95rem; color: var(--white); font-weight: 500; flex-shrink: 0; white-space: nowrap; }
+
+  .disclaimer { font-size: 0.72rem; color: var(--text-dim); font-weight: 300; line-height: 1.5; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">ELITE<span>MMA</span><small>Supplement Guide</small></a>
+  </div>
+</header>
+
+<div class="page-tabs">
+  <a href="index.html" class="page-tab">Product Guide</a>
+  <a href="advisor.html" class="page-tab">Ask the Advisor</a>
+  <a href="pricing.html" class="page-tab active">Pricing</a>
+</div>
+
+<section class="hero">
+  <div class="hero-eyebrow">Elite MMA & Fitness Centre</div>
+  <h1>PRICE<br><em>LIST.</em></h1>
+  <p>Every product on the shelf, one place to check the price. For what each one actually does, see the Product Guide tab.</p>
+</section>
+
+<div class="content">
+  <div class="price-list" id="priceList"></div>
+  <p class="disclaimer">Prices are checked periodically but always subject to change — confirm at the counter before you buy.</p>
+</div>
+
+<script src="prices.js"></script>
+<script>
+// ── PRODUCT METADATA (prices come from the shared prices.js) ──
+const PRICE_LIST = [
+  { id: "protein100",    name: "100% Protein 960g",              tagline: "Clean, high-protein shake" },
+  { id: "echinaforce",   name: "A.Vogel Echinaforce",             tagline: "Herbal immune defence" },
+  { id: "aminoBCAA",     name: "Amino BCAA 330g",                 tagline: "Muscle protection during training" },
+  { id: "creatine",      name: "Creatine Monohydrate 300g",       tagline: "Strength & power essential" },
+  { id: "fuelPlus",      name: "Fuel Plus Sports Drink 600g",     tagline: "Hydration & energy during activity" },
+  { id: "gummies",       name: "Gummies for Kids 60 gummies",     tagline: "Vitamins for active kids" },
+  { id: "immuneVitC",    name: "Immune Booster — Vit C & Zn",     tagline: "Immune defence & antioxidant" },
+  { id: "intra6",        name: "Intra 6 Berry Blast 363g",        tagline: "Full intra-workout fuel" },
+  { id: "multivitamins", name: "Multivitamins 60 capsules",       tagline: "Daily micronutrient foundation" },
+  { id: "nitric",        name: "Nitric Pre-Workout 262.5g",       tagline: "Stimulant-free — pump & performance" },
+  { id: "omega3",        name: "Omega 3 Fish Oil",                tagline: "Anti-inflammatory & brain health" },
+  { id: "gaba",          name: "Pure GABA & L-Theanine 60 caps",  tagline: "Sleep, recovery & stress relief" },
+  { id: "glutamine",     name: "Pure Glutamine 300g",             tagline: "Recovery, gut & immune support" },
+  { id: "stimNoxPowder", name: "Stim NOX 300g Fruit Punch",       tagline: "Full-dose pre-workout powder (caffeine)" },
+  { id: "stimNoxCaps",   name: "Stim NOX Capsules 100",           tagline: "Stimulant pre-workout, no mixing" },
+  { id: "upsize",        name: "Upsize Mass Gainer 3kg",          tagline: "Calories for serious size" },
+  { id: "whey",          name: "Whey One 980g",                   tagline: "Protein + BCAAs + Glutamine" }
+];
+
+const list = document.getElementById('priceList');
+list.innerHTML = PRICE_LIST.map(p => `
+  <div class="price-row">
+    <div class="price-name-block">
+      <div class="price-name">${p.name}</div>
+      <div class="price-tagline">${p.tagline}</div>
+    </div>
+    <div class="price-value">R ${PRICES[p.id]}</div>
+  </div>`).join('');
+</script>
+</body>
+</html>
